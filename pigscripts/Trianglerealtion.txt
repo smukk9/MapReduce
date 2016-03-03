@@ -1,0 +1,7 @@
+a = load 'home/administrator/pigscripts/assignment/C' as (u1:int, f1:int);
+b = load 'home/administrator/pigscripts/assignment/C' as (u2:int, f2:int);
+ab = join a by f1, b by u1; 
+abuniq = filter ab by ($1!=$3);
+abc = join abuni by (f1,f2), a by (u1,f1);
+abctri = foreach abc generate $3 as a, $1 as b, $0 as c;
+dump abctri;

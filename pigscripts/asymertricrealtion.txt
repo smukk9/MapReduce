@@ -1,0 +1,9 @@
+a = load 's3://class-data-set/twitter_social_small.txt'  as (user:long, follower:long);
+a_arrange = foreach a generate (user<follower ? user:follower) as user,  (user>follower ? user:follower) as follower;
+a_group = group a_arrange by (user,follower);
+a_group_count = foreach a_group generate FLATTEN(group) as (user, follower), COUNT (a_arrange) as count;
+a_asym_count =  filter a_group_count by (count <2) ;
+final_asym = foreach a_asym_count generate user,follower;
+STORE final_asym into 's3://570d/twitter/twit';
+	
+
